@@ -9,7 +9,7 @@ import javax.persistence.*;
 @NamedQuery(name = "Person.deleteAllRows", query = "DELETE from Person")
 public class Person implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final Long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,6 +43,13 @@ public class Person implements Serializable {
         this.lName = lName;
         this.phone = phone;
         this.created = new Date();
+    }
+
+    public Person(Long id, String fName, String lName, int phone) {
+        this.id = id;
+        this.fName = fName;
+        this.lName = lName;
+        this.phone = phone;
     }
 
     public Long getId() {

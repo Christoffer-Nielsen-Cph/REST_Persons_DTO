@@ -27,20 +27,13 @@ public class PersonDTO {
 
     private Date lastEdited;
 
-    public PersonDTO(long id, String fName, String lName, int phone, Date created) {
-        this.id = id;
-        this.fName = fName;
-        this.lName = lName;
-        this.phone = phone;
-        this.created = created;
-    }
-
     public PersonDTO(String fName, String lName, int phone, Date created) {
         this.fName = fName;
         this.lName = lName;
         this.phone = phone;
         this.created = created;
     }
+
 
     public static List<PersonDTO> getDtos(List<Person> persons){
         List<PersonDTO> personDTOS = new ArrayList();

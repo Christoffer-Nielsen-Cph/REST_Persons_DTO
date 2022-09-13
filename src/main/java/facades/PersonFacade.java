@@ -7,10 +7,12 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 
 import errorhandling.PersonNotFoundException;
+import javassist.NotFoundException;
 import utils.EMF_Creator;
 
 /**
@@ -57,7 +59,7 @@ public class PersonFacade implements IPersonFacade{
         return new PersonDTO(personEntity);
     }
     @Override
-    public PersonDTO getPersonById(long id) throws PersonNotFoundException {
+    public PersonDTO getPersonById(Long id) throws PersonNotFoundException {
         EntityManager em = emf.createEntityManager();
         Person rm = em.find(Person.class, id);
         if (rm == null)
@@ -66,18 +68,51 @@ public class PersonFacade implements IPersonFacade{
     }
 
     @Override
-    public PersonDTO deletePerson(long id) {
-        return null;
+    public Person deletePerson(Long id) throws PersonNotFoundException{
+        EntityManager em = emf.createEntityManager();
+        Person person = em.find(Person.class,id);
+        if(person == null) {
+            throw new PersonNotFoundException("No such Person with id");
+        }
+        try{
+            em.getTransaction().begin();
+            em.remove(person);
+            em.getTransaction().commit();
+            return person;
+        } finally {
+            em.close();
+        }
     }
 
     @Override
-    public PersonDTO getAllPersons() {
-        return null;
+    public List<PersonDTO> getAllPersons() throws PersonNotFoundException {
+        EntityManager em = emf.createEntityManager();
+        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p", Person.class);
+        if(query == null)
+            throw new PersonNotFoundException("No persons were found");
+        List<Person> persons = query.getResultList();
+        return PersonDTO.getDtos(persons);
     }
 
     @Override
-    public PersonDTO editPerson(PersonDTO personDTO) {
-        return null;
+    public PersonDTO editPerson(PersonDTO personDTO) throws PersonNotFoundException {
+        EntityManager em = getEntityManager();
+        Person fromDB = em.find(Person.class,personDTO.getId());
+        Date date = new Date();
+        if(fromDB == null) {
+            throw new PersonNotFoundException("No such Person with id: " + personDTO.getId());
+        }
+        Person personEntity = new Person(personDTO.getId(),personDTO.getfName(), personDTO.getlName(),personDTO.getPhone(),personDTO.getCreated());
+
+        try {
+            em.getTransaction().begin();
+            personEntity.setLastEdited(date);
+            em.merge(personEntity);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+        return new PersonDTO(personEntity);
     }
 
     public static void main(String[] args) {

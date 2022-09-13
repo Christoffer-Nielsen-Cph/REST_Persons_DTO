@@ -1,16 +1,18 @@
 package facades;
 
 import dtos.PersonDTO;
+import entities.Person;
 import errorhandling.PersonNotFoundException;
+import javassist.NotFoundException;
 
-import java.util.Date;
+import java.util.List;
 
 public interface IPersonFacade {
 
     public PersonDTO addPerson(PersonDTO personDTO);
-    public PersonDTO deletePerson(long id) throws PersonNotFoundException;
-    public PersonDTO getPersonById(long id) throws PersonNotFoundException;
-    public PersonDTO getAllPersons() throws PersonNotFoundException;
+    public Person deletePerson(Long id) throws PersonNotFoundException;
+    public PersonDTO getPersonById(Long id) throws PersonNotFoundException;
+    public List<PersonDTO> getAllPersons() throws PersonNotFoundException;
     public PersonDTO editPerson(PersonDTO personDTO) throws PersonNotFoundException;
 
 }

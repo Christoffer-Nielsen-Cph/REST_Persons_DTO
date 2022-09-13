@@ -65,7 +65,7 @@ public class PersonFacadeTest {
         Date date = new Date();
         PersonDTO personDTO = new PersonDTO("Henning","Olsen",90418471,date);
         facade.addPerson(personDTO);
-        String actual = facade.getPersonById(3).getfName();
+        String actual = facade.getPersonById(3L).getfName();
         String expected = "Henning";
         assertEquals(expected,actual);
     }
