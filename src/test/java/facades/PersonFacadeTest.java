@@ -1,7 +1,9 @@
 package facades;
 
+import dtos.PersonDTO;
+import errorhandling.PersonNotFoundException;
 import utils.EMF_Creator;
-import entities.RenameMe;
+import entities.Person;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.AfterAll;
@@ -11,20 +13,22 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Date;
+
 //Uncomment the line below, to temporarily disable this test
 //@Disabled
-public class FacadeExampleTest {
+public class PersonFacadeTest {
 
     private static EntityManagerFactory emf;
-    private static FacadeExample facade;
+    private static PersonFacade facade;
 
-    public FacadeExampleTest() {
+    public PersonFacadeTest() {
     }
 
     @BeforeAll
     public static void setUpClass() {
        emf = EMF_Creator.createEntityManagerFactoryForTest();
-       facade = FacadeExample.getFacadeExample(emf);
+       facade = PersonFacade.getPersonFacade(emf);
     }
 
     @AfterAll
@@ -37,11 +41,12 @@ public class FacadeExampleTest {
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
+        Date date = new Date();
         try {
             em.getTransaction().begin();
-            em.createNamedQuery("RenameMe.deleteAllRows").executeUpdate();
-            em.persist(new RenameMe("Some txt", "More text"));
-            em.persist(new RenameMe("aaa", "bbb"));
+            em.createNamedQuery("Person.deleteAllRows").executeUpdate();
+            em.persist(new Person("Chris","Nielsen",23115525,date));
+            em.persist(new Person("Frank", "Hvam",60430913,date));
 
             em.getTransaction().commit();
         } finally {
@@ -56,8 +61,13 @@ public class FacadeExampleTest {
 
     // TODO: Delete or change this method 
     @Test
-    public void testAFacadeMethod() throws Exception {
-        assertEquals(2, facade.getRenameMeCount(), "Expects two rows in the database");
+    public void addPersonTest() throws PersonNotFoundException {
+        Date date = new Date();
+        PersonDTO personDTO = new PersonDTO("Henning","Olsen",90418471,date);
+        facade.addPerson(personDTO);
+        String actual = facade.getPersonById(3).getfName();
+        String expected = "Henning";
+        assertEquals(expected,actual);
     }
     
 

@@ -5,10 +5,12 @@
  */
 package facades;
 
-import dtos.RenameMeDTO;
-import entities.RenameMe;
+import dtos.PersonDTO;
+import entities.Person;
 import javax.persistence.EntityManagerFactory;
 import utils.EMF_Creator;
+
+import java.util.Date;
 
 /**
  *
@@ -17,10 +19,11 @@ import utils.EMF_Creator;
 public class Populator {
     public static void populate(){
         EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory();
-        FacadeExample fe = FacadeExample.getFacadeExample(emf);
-        fe.create(new RenameMeDTO(new RenameMe("First 1", "Last 1")));
-        fe.create(new RenameMeDTO(new RenameMe("First 2", "Last 2")));
-        fe.create(new RenameMeDTO(new RenameMe("First 3", "Last 3")));
+        PersonFacade pf = PersonFacade.getPersonFacade(emf);
+        Date date = new Date();
+        pf.addPerson(new PersonDTO(new Person("Chris", "Nielsen",25115525,date)));
+        pf.addPerson(new PersonDTO(new Person("Frank", "Hvam",23154325,date)));
+        pf.addPerson(new PersonDTO(new Person("Henning", "Olsen",21115225,date)));
     }
     
     public static void main(String[] args) {
